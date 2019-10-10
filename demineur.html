@@ -60,7 +60,8 @@
         
         if(mine == "true") {
           alert("BOOM, PERDU")   
-          Demineur();
+            VisuMines();
+         // Demineur();
         }
 
        if(mine == "false") {
@@ -68,7 +69,6 @@
            var cellLigne = cell.parentNode.rowIndex;    //parentNode permet d'accéder a la balise parent de <td>, donc ici c'est <tr>
            var cellColonne = cell.cellIndex;        //on récupère le num de la colonne
 
-           
 
            for (var i = Math.max(cellLigne - 1, 0); i <= Math.min(cellLigne + 1, nbrLignes-1); i++) { //Vérification : exemple, si on prend la première ligne (ou la dernière) alors on ne peut pas vérifier 
             for(var j = Math.max(cellColonne - 1, 0); j <= Math.min(cellColonne + 1, nbrColonnes-1); j++) {         // s'il y a une bombe sur la ligne précedente (ou la suivante) car elle n'existe pas
@@ -82,6 +82,16 @@
            //listeMine.innerHTML += "Ligne " + (cellLigne + 1) +" Colonne " + (cellColonne + 1) +"<br />";
        }
 
+
+       function VisuMines(){    //affiche l'emplacement des mines lorsque le joueur perd la partie.
+        for (var i=0; i< nbrLignes; i++) {  //on parcours la table 
+            for(var j=0; j < nbrColonnes; j++) {
+                var cell = table.rows[i].cells[j];
+                if (cell.getAttribute("mine")=="true") cell.className="mine";
+            }
+        }
+        }
+       
     } 
 
 </script>
