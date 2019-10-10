@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<title>Démineur</title>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" type="text/css" href="style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script> <!-- nécessaire pour utiliser less !-->
+</head>
+
+<body>
+
+<script>
+
+    function Demineur() {
+
+    nbrLignes = document.forms["regles"]["lignes"].value;
+    nbrColonnes = document.forms["regles"]["colonnes"].value; 
+
+        table = document.getElementById("demineur");
+        table.innerHTML = ""; //on supprime le contenu entre les balises <table></table>
+
+    var listeMine = document.getElementById("listeMine");
+        listeMine.innerHTML = "";  //Suppression de la liste des pos des bombes
+
+    
+        for (var i=0; i < nbrLignes; i++) { //on crée une colonne puit les x lignes de cette colonne, ensuite seuleument on passe a la prochaine colonne
+            var row = table.insertRow(i); //ceci place une balise <tr>
+    
+            for (var j=0; j < nbrColonnes; j++) {
+                var cell = row.insertCell(j); //ceci place une balise <td> dans la balise <tr>
+                cell.setAttribute("mine","false");  //crée un attribut mine et met sa valeur a false dans la balise <tr>
+
+                cell.onclick = function() {     //on fournie une valeur de type function
+                    DemineurClick(this) ;  
+                 }
+            }
+        }
+
+
+    var nbrMines = document.forms["regles"]["nbrMines"].value;
+    for(var m=0 ; m < nbrMines; m++) {
+        var rowMine = Math.floor(Math.random() * nbrLignes); //Math.floor permet de garder la partie entière, Math.random génère un nbr entre 0 et 1
+        var cellMine = Math.floor(Math.random() *nbrColonnes);
+
+        var mine = table.rows[rowMine].cells[cellMine];
+        
+        mine.setAttribute("mine","true"); //Si la cellule est une bombe, alors je change l'attribut mine de false a true
+
+        //DEBUG
+        //mine.innerHTML = "B";     //affiche un B sur les cellules ou il y a une bombe
+        //listeMine.innerHTML +=  " Ligne : " + (rowMine + 1) + " Colonne :" + (cellMine + 1) + "<br />";     //affiche les coordonnées des bombes
+    }
+   return false;
+}
+
+
+    function DemineurClick(cell) {  //Function qui se déclenche lorsque que l'on clique sur une des cellules du tableau
+
+        var mine = cell.getAttribute("mine")
+        
+        if(mine == "true") {
+          alert("BOOM, PERDU")   
+          Demineur();
+        }
+
+       if(mine == "false") {
+           var nbrMinesAdj = 0;
+           var cellLigne = cell.parentNode.rowIndex;    //parentNode permet d'accéder a la balise parent de <td>, donc ici c'est <tr>
+           var cellColonne = cell.cellIndex;        //on récupère le num de la colonne
+
+           
+
+           for (var i = Math.max(cellLigne - 1, 0); i <= Math.min(cellLigne + 1, nbrLignes-1); i++) { //Vérification : exemple, si on prend la première ligne (ou la dernière) alors on ne peut pas vérifier 
+            for(var j = Math.max(cellColonne - 1, 0); j <= Math.min(cellColonne + 1, nbrColonnes-1); j++) {         // s'il y a une bombe sur la ligne précedente (ou la suivante) car elle n'existe pas
+             if (table.rows[i].cells[j].getAttribute("mine")=="true") { nbrMinesAdj++}
+            }
+           }
+           cell.innerHTML = nbrMinesAdj;
+
+           //DEBUG
+           //cell.innerHTML = "U";
+           //listeMine.innerHTML += "Ligne " + (cellLigne + 1) +" Colonne " + (cellColonne + 1) +"<br />";
+       }
+
+    } 
+
+</script>
+
+<h1>Démineur</h1>
+
+<form  name="regles" method="POST" onsubmit="return Demineur()">
+    <h3>Paramètres :</h3>
+    <p>
+        <label for="lignes">Nombres de lignes : </label>
+        <input type="number" name="lignes">
+    </p>
+    <p>
+        <label for="colonnes">Nombres de colonnes: </label>
+        <input type="number" name="colonnes">
+    </p>
+    <p>
+        <label for="nbrMines">Nombres de mines : </label>
+        <input type="number" name="nbrMines">
+    </p>
+
+        <input type="submit" value="Envoyer">
+</form>
+
+<p id="listeMine">
+</p>
+
+<table class="demineur" id="demineur"> <!-- l'id est utilisée pour le JS et la class pour le CSS (<tr> pour ligne et <td> pour colonne) -->
+</table>
+
+
+</body>
+</html>
