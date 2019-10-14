@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<title>Démineur</title>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" type="text/css" href="style.less">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.9.0/less.min.js" ></script> <!-- nécessaire pour utiliser Less !-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> <!-- JQuery -->
+</head>
+
+<body>
+<script>
+
+
+function Demineur() {
+    
+    $(document).ready(function(){
+
+        $("#demineur tr").remove();
+        for (var i=0; i < $('#nbrlignes').val(); i++) { 
+
+            var cell = "";  //emplacement de la cellule, 1 ligne et 1 colonne
+            var col = "<tr>";   //colonne
+                
+            for (var j=0; j < $('#nbrcol').val(); j++) {
+                cell += "<td>" + j + "</td>";    
+            }
+
+            col += cell + "</tr>";
+            $("#demineur").append(col);
+            $("td").attr("mine", "false");
+
+            $("td").click(function() {
+                alert( "click cell" );
+                return false;
+            });
+        }
+       
+    });
+
+    
+   return false;
+}
+
+
+</script>
+
+<h1>Démineur</h1>
+
+<form  name="regles" method="POST" onsubmit="return Demineur()">
+    <h3>Paramètres :</h3>
+    <p>
+        <label for="lignes">Nombres de lignes : </label>
+        <input id="nbrlignes" type="number" name="lignes">
+    </p>
+    <p>
+        <label for="colonnes">Nombres de colonnes: </label>
+        <input id="nbrcol" type="number" name="colonnes">
+    </p>
+    <p>
+        <label for="nbrMines">Nombres de mines : </label>
+        <input type="number" name="nbrMines">
+    </p>
+
+        <input type="submit" value="Envoyer">
+</form>
+
+<p id="listeMine">
+</p>
+
+<table class="demineur" id="demineur"> 
+</table>
+
+
+</body>
+</html>
